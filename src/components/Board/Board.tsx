@@ -207,10 +207,59 @@ const Board = () => {
               Z"
             />
           </clipPath>
+          <clipPath
+            id="myCurve90"
+            clipPathUnits="objectBoundingBox"
+            transform="rotate(90 0 0) translate(0, -200)"
+          >
+            <path
+              d="M 0,1
+              C 0 .45, .45 0, 1 0
+              L 1,.49
+              C .7 .5, .5 .7, .49 1
+              L 0,1
+              Z"
+            />
+          </clipPath>
+          <clipPath
+            id="myCurve180"
+            clipPathUnits="objectBoundingBox"
+            transform="rotate(180 0 0) translate(-200, -200)"
+          >
+            <path
+              d="M 0,1
+              C 0 .45, .45 0, 1 0
+              L 1,.49
+              C .7 .5, .5 .7, .49 1
+              L 0,1
+              Z"
+            />
+          </clipPath>
+          <clipPath
+            id="myCurve270"
+            clipPathUnits="objectBoundingBox"
+            transform="rotate(270 0 0) translate(-200, 0)"
+          >
+            <path
+              d="M 0,1
+              C 0 .45, .45 0, 1 0
+              L 1,.49
+              C .7 .5, .5 .7, .49 1
+              L 0,1
+              Z"
+            />
+          </clipPath>
         </defs>
       </svg>
     </div>
   );
 };
+
+// d="M -.5,.5
+// C -.5 -.05, -.05 -.5, .5 -.5
+// L -5,-0.01
+// C .2 0, 0 2, -0.01 .5
+// L -.5,.5
+// Z"
 
 export default Board;
