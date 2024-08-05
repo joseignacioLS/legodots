@@ -4,9 +4,14 @@ import styles from "./DotOptions.module.scss";
 interface IProps {
   selectedDot?: IDot;
   handleModifyDot: (options: Partial<IDot>, id?: number) => void;
+  handleDeleteDot(id: number): void;
 }
 
-const DotOptions = ({ selectedDot, handleModifyDot }: IProps) => {
+const DotOptions = ({
+  selectedDot,
+  handleModifyDot,
+  handleDeleteDot,
+}: IProps) => {
   if (!selectedDot) return <></>;
   return (
     <div
@@ -23,6 +28,15 @@ const DotOptions = ({ selectedDot, handleModifyDot }: IProps) => {
           handleModifyDot({ color: e.target.value }, selectedDot.id);
         }}
       />
+      {!selectedDot.fixed && (
+        <button
+          onClick={() => {
+            handleDeleteDot(selectedDot.id);
+          }}
+        >
+          🗑
+        </button>
+      )}
     </div>
   );
 };

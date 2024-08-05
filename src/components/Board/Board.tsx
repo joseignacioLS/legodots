@@ -146,6 +146,8 @@ const Board = () => {
 
       return newState.filter((p) => p.id !== id || p.fixed);
     });
+    setSelectedDot(undefined);
+    setHardSelectedDot(undefined);
   };
 
   useEffect(() => {
@@ -235,6 +237,7 @@ const Board = () => {
       <DotOptions
         selectedDot={pieces.find((p) => p.id === hardSelectedDot)}
         handleModifyDot={handleModifyDot}
+        handleDeleteDot={deleteDot}
       />
       <SVGPaths size={unitSize} />
     </div>
