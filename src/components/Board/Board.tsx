@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import styles from "./Board.module.scss";
 import Dot from "../Dot/Dot";
+import DotOptions from "../DotOptions/DotOptions";
+import SVGPaths from "../SVGPaths/SVGPaths";
+import { dot } from "node:test/reporters";
 
 export interface IDot {
   id: number;
@@ -11,54 +14,76 @@ export interface IDot {
   y: number;
   rotation: number;
   color: string;
-  forceDrag?: boolean;
+  fixed?: boolean;
 }
 
 const initialState: IDot[] = [
   {
-    id: 0,
+    id: -1,
     type: "dot",
-    x: 3,
-    y: 3,
+    x: 0,
+    y: 0,
     rotation: 0,
     color: "#FF0000",
+    fixed: true,
   },
   {
-    id: 1,
+    id: -2,
     type: "corner",
-    x: 4,
-    y: 3,
+    x: 0,
+    y: 1,
     rotation: 0,
     color: "#FF0000",
+    fixed: true,
   },
   {
-    id: 2,
+    id: -3,
     type: "u",
-    x: 5,
-    y: 3,
+    x: 0,
+    y: 2,
     rotation: 0,
     color: "#FF0000",
+    fixed: true,
   },
   {
-    id: 3,
+    id: -4,
     type: "circle",
-    x: 6,
+    x: 0,
     y: 3,
     rotation: 0,
     color: "#FF0000",
+    fixed: true,
   },
   {
-    id: 4,
+    id: -5,
     type: "curve",
-    x: 7,
-    y: 3,
+    x: 0,
+    y: 4,
     rotation: 0,
     color: "#FF0000",
+    fixed: true,
   },
 ];
 
+const checkCollision = (dot: IDot, pieces: IDot[]) => {
+  return pieces
+    .filter((p) => !p.fixed)
+    .some((referencePiece) => {
+      return (
+        referencePiece.id !== dot.id &&
+        referencePiece.type === dot.type &&
+        referencePiece.x === dot.x &&
+        referencePiece.y === dot.y &&
+        referencePiece.rotation === dot.rotation
+      );
+    });
+};
+
 const Board = () => {
-  const [selectedKey, setSelectedKey] = useState<number | undefined>(undefined);
+  const [selectedDot, setSelectedDot] = useState<number | undefined>(undefined);
+  const [hardSelectedDot, setHardSelectedDot] = useState<number | undefined>(
+    undefined
+  );
   const [unitSize, setUnitSize] = useState(100);
   const [pieces, setPieces] = useState<IDot[]>(initialState);
   const [copy, setCopy] = useState(false);
@@ -67,27 +92,35 @@ const Board = () => {
 
   const [dragging, setDragging] = useState(false);
 
-  const handleModifyDot = (options: Partial<IDot>) => {
-    if (copy) {
+  const handleModifyDot = (
+    options: Partial<IDot> & { copy?: boolean },
+    id?: number
+  ) => {
+    const selectedDotId = id ?? selectedDot;
+    console.log(copy, options);
+    if (copy || options.copy) {
       setPieces((oldState) => {
         const newState = structuredClone(oldState);
-        const piece = newState.find((p) => p.id === selectedKey);
+        const piece = newState.find((p) => p.id === selectedDotId);
         if (!piece) return oldState;
         const newPiece = structuredClone(piece);
         newPiece.id = Math.max(...newState.map((p) => p.id)) + 1;
         Object.entries(options).forEach(([key, value]) => {
           newPiece[key as keyof IDot] = value as never;
         });
+        newPiece.fixed = false;
+        if (checkCollision(newPiece, newState)) return oldState;
         return [...newState, newPiece];
       });
     } else {
       setPieces((oldState) => {
         const newState = structuredClone(oldState);
-        const piece = newState.find((p) => p.id === selectedKey);
+        const piece = newState.find((p) => p.id === selectedDotId);
         if (!piece) return oldState;
         Object.entries(options).forEach(([key, value]) => {
           piece[key as keyof IDot] = value as never;
         });
+        if (checkCollision(piece, newState)) return oldState;
         return newState;
       });
     }
@@ -111,18 +144,18 @@ const Board = () => {
     setPieces((oldState) => {
       const newState = structuredClone(oldState);
 
-      return newState.filter((p) => p.id !== id);
+      return newState.filter((p) => p.id !== id || p.fixed);
     });
   };
 
   useEffect(() => {
     const listenerDown = (e: any) => {
-      if (selectedKey === undefined) return;
+      if (selectedDot === undefined) return;
       if (e.key === "r") {
         setPieces((oldState) => {
           const newState = structuredClone(oldState);
-          const piece = newState.find((p) => p.id === selectedKey);
-          if (!piece) return oldState;
+          const piece = newState.find((p) => p.id === selectedDot);
+          if (!piece || piece.fixed) return oldState;
 
           piece.rotation = (piece.rotation + 90) % 360;
 
@@ -133,11 +166,11 @@ const Board = () => {
         setCopy(true);
       }
       if (e.key === "x") {
-        deleteDot(selectedKey);
+        deleteDot(selectedDot);
       }
     };
     const listenerUp = (e: any) => {
-      if (selectedKey === undefined) return;
+      if (selectedDot === undefined) return;
 
       if (e.key === "d") {
         setCopy(false);
@@ -149,7 +182,7 @@ const Board = () => {
       document.removeEventListener("keydown", listenerDown);
       document.removeEventListener("keyup", listenerUp);
     };
-  }, [selectedKey]);
+  }, [selectedDot]);
 
   return (
     <div
@@ -157,6 +190,7 @@ const Board = () => {
       onContextMenu={(e) => e.preventDefault()}
       onMouseDown={(e) => {
         e.stopPropagation();
+        setHardSelectedDot(undefined);
         setDragging(true);
       }}
       onMouseUp={(e) => {
@@ -188,78 +222,23 @@ const Board = () => {
             type={piece.type}
             rotation={piece.rotation}
             handleModifyDot={handleModifyDot}
-            setSelectedKey={setSelectedKey}
-            selected={piece.id === selectedKey}
+            setSelectedDot={setSelectedDot}
+            setHardSelectedDot={setHardSelectedDot}
+            selected={piece.id === selectedDot}
+            hardSelected={piece.id === hardSelectedDot}
             color={piece.color}
-            forceDrag={!!piece.forceDrag}
+            fixed={piece.fixed}
           />
         );
       })}
-      <svg width="0" height="0">
-        <defs>
-          <clipPath id="myCurve" clipPathUnits="objectBoundingBox">
-            <path
-              d="M 0,1
-              C 0 .45, .45 0, 1 0
-              L 1,.49
-              C .7 .5, .5 .7, .49 1
-              L 0,1
-              Z"
-            />
-          </clipPath>
-          <clipPath
-            id="myCurve90"
-            clipPathUnits="objectBoundingBox"
-            transform="rotate(90 0 0) translate(0, -200)"
-          >
-            <path
-              d="M 0,1
-              C 0 .45, .45 0, 1 0
-              L 1,.49
-              C .7 .5, .5 .7, .49 1
-              L 0,1
-              Z"
-            />
-          </clipPath>
-          <clipPath
-            id="myCurve180"
-            clipPathUnits="objectBoundingBox"
-            transform="rotate(180 0 0) translate(-200, -200)"
-          >
-            <path
-              d="M 0,1
-              C 0 .45, .45 0, 1 0
-              L 1,.49
-              C .7 .5, .5 .7, .49 1
-              L 0,1
-              Z"
-            />
-          </clipPath>
-          <clipPath
-            id="myCurve270"
-            clipPathUnits="objectBoundingBox"
-            transform="rotate(270 0 0) translate(-200, 0)"
-          >
-            <path
-              d="M 0,1
-              C 0 .45, .45 0, 1 0
-              L 1,.49
-              C .7 .5, .5 .7, .49 1
-              L 0,1
-              Z"
-            />
-          </clipPath>
-        </defs>
-      </svg>
+
+      <DotOptions
+        selectedDot={pieces.find((p) => p.id === hardSelectedDot)}
+        handleModifyDot={handleModifyDot}
+      />
+      <SVGPaths size={unitSize} />
     </div>
   );
 };
-
-// d="M -.5,.5
-// C -.5 -.05, -.05 -.5, .5 -.5
-// L -5,-0.01
-// C .2 0, 0 2, -0.01 .5
-// L -.5,.5
-// Z"
 
 export default Board;

@@ -7,8 +7,35 @@
   cursor: default;
 
   &.dragging {
-    opacity: .99;
+    opacity: 0.99;
     background-color: transparent;
+  }
+
+  // &.selected {
+  //   &::after {
+  //     content: "";
+  //     width: 8px;
+  //     height: 8px;
+  //     position: absolute;
+  //     background-color: white;
+  //     border-radius: 100%;
+  //     top: 50%;
+  //     left: 50%;
+  //     transform: translate(-50%, -50%);
+  //   }
+  // }
+  &.hardSelected {
+    &::after {
+      content: "";
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      border: 4px solid white;
+      border-radius: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 
   &:has(.curve) {
@@ -25,7 +52,6 @@
     &:has(.rot270) {
       clip-path: url(#myCurve270);
     }
-
   }
 
   .shape {
@@ -34,8 +60,6 @@
     border-color: variables.$color_black;
     border-style: solid;
     border-radius: $basicBorderRadius;
-
-
     &.rot90 {
       rotate: 90deg;
     }
@@ -48,16 +72,14 @@
       rotate: 270deg;
     }
 
-    &.selected {
-      opacity: .5;
-    }
-
     &.square {
-      border-radius: $basicBorderRadius $basicBorderRadius $basicBorderRadius $basicBorderRadius;
+      border-radius: $basicBorderRadius $basicBorderRadius $basicBorderRadius
+        $basicBorderRadius;
     }
 
     &.corner {
-      border-radius: 100% $basicBorderRadius $basicBorderRadius $basicBorderRadius;
+      border-radius: 100% $basicBorderRadius $basicBorderRadius
+        $basicBorderRadius;
     }
 
     &.u {
@@ -72,10 +94,7 @@
       border-radius: $basicBorderRadius;
       clip-path: url(#myCurve);
     }
-
   }
-
-
 
   .contextualMenu {
     position: absolute;
