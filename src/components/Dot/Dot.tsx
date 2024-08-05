@@ -17,6 +17,7 @@ interface IProps {
   hardSelected: boolean;
   color: string;
   fixed?: boolean;
+  pieceSize: number;
 }
 
 const Dot = ({
@@ -33,6 +34,7 @@ const Dot = ({
   selected,
   hardSelected,
   color,
+  pieceSize,
   fixed = false,
 }: IProps) => {
   const [startDrag, setStartDrag] = useState<number[] | undefined>(undefined);
@@ -49,10 +51,11 @@ const Dot = ({
         ${hardSelected ? styles.hardSelected : ""}
         `}
       style={{
-        width: `${(["curve"].includes(type) ? 2 : 1) * size}px`,
-        height: `${(["curve"].includes(type) ? 2 : 1) * size}px`,
+        width: `${pieceSize * size}px`,
+        height: `${pieceSize * size}px`,
         left: `${fixed ? 0 : size * (board[0] + x)}px`,
         top: `${fixed ? y * size : size * (board[1] + y)}px`,
+        padding: `${size / 50}px`,
       }}
       onMouseDown={(e) => {
         e.stopPropagation();
@@ -94,27 +97,16 @@ const Dot = ({
         ${type === "u" ? styles.u : ""} 
         ${type === "circle" ? styles.circle : ""} 
         ${type === "curve" ? styles.curve : ""} 
+        ${type === "big-curve" ? styles.bigCurve : ""} 
         ${rotation === 90 ? styles.rot90 : ""} 
         ${rotation === 180 ? styles.rot180 : ""} 
         ${rotation === 270 ? styles.rot270 : ""}
        
         `}
         style={{
-          borderWidth: `${size / 50}px`,
           backgroundColor: color,
         }}
       ></div>
-      {/* {hardSelected && (
-        <div className={styles.contextualMenu}>
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => {
-              handleModifyDot({ color: e.currentTarget.value });
-            }}
-          />
-        </div>
-      )} */}
     </div>
   );
 };

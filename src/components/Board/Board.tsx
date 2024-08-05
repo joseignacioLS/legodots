@@ -5,13 +5,13 @@ import styles from "./Board.module.scss";
 import Dot from "../Dot/Dot";
 import DotOptions from "../DotOptions/DotOptions";
 import SVGPaths from "../SVGPaths/SVGPaths";
-import { dot } from "node:test/reporters";
 
 export interface IDot {
   id: number;
-  type: "dot" | "corner" | "u" | "circle" | "curve";
+  type: "dot" | "corner" | "u" | "circle" | "curve" | "big-curve";
   x: number;
   y: number;
+  size: number;
   rotation: number;
   color: string;
   fixed?: boolean;
@@ -26,6 +26,7 @@ const initialState: IDot[] = [
     rotation: 0,
     color: "#FF0000",
     fixed: true,
+    size: 1,
   },
   {
     id: -2,
@@ -35,6 +36,7 @@ const initialState: IDot[] = [
     rotation: 0,
     color: "#FF0000",
     fixed: true,
+    size: 1,
   },
   {
     id: -3,
@@ -44,6 +46,7 @@ const initialState: IDot[] = [
     rotation: 0,
     color: "#FF0000",
     fixed: true,
+    size: 1,
   },
   {
     id: -4,
@@ -53,6 +56,7 @@ const initialState: IDot[] = [
     rotation: 0,
     color: "#FF0000",
     fixed: true,
+    size: 1,
   },
   {
     id: -5,
@@ -62,6 +66,17 @@ const initialState: IDot[] = [
     rotation: 0,
     color: "#FF0000",
     fixed: true,
+    size: 2,
+  },
+  {
+    id: -6,
+    type: "big-curve",
+    x: 0,
+    y: 6,
+    rotation: 0,
+    color: "#FF0000",
+    fixed: true,
+    size: 3,
   },
 ];
 
@@ -97,7 +112,6 @@ const Board = () => {
     id?: number
   ) => {
     const selectedDotId = id ?? selectedDot;
-    console.log(copy, options);
     if (copy || options.copy) {
       setPieces((oldState) => {
         const newState = structuredClone(oldState);
@@ -211,6 +225,12 @@ const Board = () => {
           setUnitSize((oldState) => oldState - 1);
         }
       }}
+      style={{
+        backgroundSize: `${unitSize}px ${unitSize}px`,
+        backgroundPosition: `${boardDrag[0] * unitSize}px ${
+          boardDrag[1] * unitSize
+        }px`,
+      }}
     >
       {pieces.map((piece) => {
         return (
@@ -230,6 +250,7 @@ const Board = () => {
             hardSelected={piece.id === hardSelectedDot}
             color={piece.color}
             fixed={piece.fixed}
+            pieceSize={piece.size}
           />
         );
       })}
