@@ -32,7 +32,7 @@ const SVGPaths = ({ size }: IProps) => {
         </clipPath>
 
         <clipPath
-          id="myBigCurve1800"
+          id="myBigCurve180"
           clipPathUnits="objectBoundingBox"
           transform={`rotate(180 0 0) translate(-${size * 3}, -${size * 3})`}
         >
@@ -47,7 +47,7 @@ const SVGPaths = ({ size }: IProps) => {
         </clipPath>
 
         <clipPath
-          id="myBigCurve1800"
+          id="myBigCurve270"
           clipPathUnits="objectBoundingBox"
           transform={`rotate(270 0 0) translate(-${size * 3}, 0)`}
         >

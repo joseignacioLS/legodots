@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styles from "./Dot.module.scss";
-import { IDot } from "../Board/Board";
+import { Vector2 } from "@/utils/Space";
+import { IDot } from "@/constants/dots";
 
 interface IProps {
   id: number;
-  x: number;
-  y: number;
+  position: Vector2;
   rotation: number;
   board: number[];
   size: number;
@@ -17,13 +17,12 @@ interface IProps {
   hardSelected: boolean;
   color: string;
   fixed?: boolean;
-  pieceSize: number;
+  pieceSize: Vector2;
 }
 
 const Dot = ({
   id,
-  x,
-  y,
+  position,
   rotation,
   type,
   size,
@@ -51,10 +50,10 @@ const Dot = ({
         ${hardSelected ? styles.hardSelected : ""}
         `}
       style={{
-        width: `${pieceSize * size}px`,
-        height: `${pieceSize * size}px`,
-        left: `${fixed ? 0 : size * (board[0] + x)}px`,
-        top: `${fixed ? y * size : size * (board[1] + y)}px`,
+        width: `${pieceSize.x * size}px`,
+        height: `${pieceSize.y * size}px`,
+        left: `${fixed ? position.x * size : size * (board[0] + position.x)}px`,
+        top: `${fixed ? position.y * size : size * (board[1] + position.y)}px`,
         padding: `${size / 50}px`,
       }}
       onMouseDown={(e) => {
@@ -76,12 +75,16 @@ const Dot = ({
         setStartDrag(undefined);
         if (fixed) {
           handleModifyDot({
-            x: -Math.round(board[0]) + deltaX,
-            y: -Math.round(board[1]) + deltaY + y,
+            position: new Vector2(
+              -Math.round(board[0]) + deltaX + position.x,
+              -Math.round(board[1]) + deltaY + position.y
+            ),
             copy: fixed,
           });
         } else {
-          handleModifyDot({ x: x + deltaX, y: y + deltaY });
+          handleModifyDot({
+            position: new Vector2(deltaX + position.x, deltaY + position.y),
+          });
         }
       }}
       onMouseEnter={() => setSelectedDot(id)}
@@ -93,6 +96,9 @@ const Dot = ({
       <div
         className={`${styles.shape}
         ${type === "dot" ? styles.square : ""}
+        ${type === "dot2x1" ? styles.square2x1 : ""}
+        ${type === "dot3x1" ? styles.square3x1 : ""}
+        ${type === "dot4x1" ? styles.square4x1 : ""}
         ${type === "corner" ? styles.corner : ""} 
         ${type === "u" ? styles.u : ""} 
         ${type === "circle" ? styles.circle : ""} 

@@ -1,4 +1,4 @@
-import { IDot } from "../Board/Board";
+import { IDot } from "@/constants/dots";
 import styles from "./DotOptions.module.scss";
 
 interface IProps {
@@ -34,7 +34,7 @@ const DotOptions = ({
             handleDeleteDot(selectedDot.id);
           }}
         >
-          🗑
+          Delete
         </button>
       )}
     </div>

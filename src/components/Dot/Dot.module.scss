@@ -76,11 +76,21 @@
     }
 
     &.square {
-      border-radius: $basicBorderRadius $basicBorderRadius $basicBorderRadius $basicBorderRadius;
+      border-radius: $basicBorderRadius $basicBorderRadius $basicBorderRadius
+        $basicBorderRadius;
+    }
+
+    &.square2x1 {
+      transform-origin: 50% 24.5%;
+    }
+
+    &.square4x1 {
+      transform-origin: 50% 12.125%;
     }
 
     &.corner {
-      border-radius: 100% $basicBorderRadius $basicBorderRadius $basicBorderRadius;
+      border-radius: 100% $basicBorderRadius $basicBorderRadius
+        $basicBorderRadius;
     }
 
     &.u {

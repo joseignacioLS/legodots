@@ -5,102 +5,17 @@ import styles from "./Board.module.scss";
 import Dot from "../Dot/Dot";
 import DotOptions from "../DotOptions/DotOptions";
 import SVGPaths from "../SVGPaths/SVGPaths";
-
-export interface IDot {
-  id: number;
-  type: "dot" | "corner" | "u" | "circle" | "curve" | "big-curve";
-  x: number;
-  y: number;
-  size: number;
-  rotation: number;
-  color: string;
-  fixed?: boolean;
-}
-
-const initialState: IDot[] = [
-  {
-    id: -1,
-    type: "dot",
-    x: 0,
-    y: 0,
-    rotation: 0,
-    color: "#FF0000",
-    fixed: true,
-    size: 1,
-  },
-  {
-    id: -2,
-    type: "corner",
-    x: 0,
-    y: 1,
-    rotation: 0,
-    color: "#FF0000",
-    fixed: true,
-    size: 1,
-  },
-  {
-    id: -3,
-    type: "u",
-    x: 0,
-    y: 2,
-    rotation: 0,
-    color: "#FF0000",
-    fixed: true,
-    size: 1,
-  },
-  {
-    id: -4,
-    type: "circle",
-    x: 0,
-    y: 3,
-    rotation: 0,
-    color: "#FF0000",
-    fixed: true,
-    size: 1,
-  },
-  {
-    id: -5,
-    type: "curve",
-    x: 0,
-    y: 4,
-    rotation: 0,
-    color: "#FF0000",
-    fixed: true,
-    size: 2,
-  },
-  {
-    id: -6,
-    type: "big-curve",
-    x: 0,
-    y: 6,
-    rotation: 0,
-    color: "#FF0000",
-    fixed: true,
-    size: 3,
-  },
-];
-
-const checkCollision = (dot: IDot, pieces: IDot[]) => {
-  return pieces
-    .filter((p) => !p.fixed)
-    .some((referencePiece) => {
-      return (
-        referencePiece.id !== dot.id &&
-        referencePiece.type === dot.type &&
-        referencePiece.x === dot.x &&
-        referencePiece.y === dot.y &&
-        referencePiece.rotation === dot.rotation
-      );
-    });
-};
+import { referenceDots } from "@/constants/referenceDots";
+import { IDot } from "@/constants/dots";
+import { checkCollision } from "@/utils/Space";
 
 const Board = () => {
   const [selectedDot, setSelectedDot] = useState<number | undefined>(undefined);
   const [hardSelectedDot, setHardSelectedDot] = useState<number | undefined>(
     undefined
   );
-  const [unitSize, setUnitSize] = useState(100);
-  const [pieces, setPieces] = useState<IDot[]>(initialState);
+  const [unitSize, setUnitSize] = useState(80);
+  const [pieces, setPieces] = useState<IDot[]>(referenceDots);
   const [copy, setCopy] = useState(false);
 
   const [boardDrag, setBoardDrag] = useState([0, 0]);
@@ -238,8 +153,7 @@ const Board = () => {
             key={piece.id}
             id={piece.id}
             board={boardDrag}
-            x={piece.x}
-            y={piece.y}
+            position={piece.position}
             size={unitSize}
             type={piece.type}
             rotation={piece.rotation}
