@@ -20,6 +20,8 @@ interface IProps {
   pieceSize: Vector2;
 }
 
+const fixedDotSize = 25;
+
 const Dot = ({
   id,
   position,
@@ -50,22 +52,23 @@ const Dot = ({
         ${hardSelected ? styles.hardSelected : ""}
         `}
       style={{
-        width: `${pieceSize.x * size}px`,
-        height: `${pieceSize.y * size}px`,
-        left: `${fixed ? position.x * size : size * (board[0] + position.x)}px`,
-        top: `${fixed ? position.y * size : size * (board[1] + position.y)}px`,
-        padding: `${size / 50}px`,
+        width: `${pieceSize.x * (fixed ? fixedDotSize : size)}px`,
+        height: `${pieceSize.y * (fixed ? fixedDotSize : size)}px`,
+        left: `${
+          fixed ? position.x * fixedDotSize + 5 : size * (board[0] + position.x)
+        }px`,
+        top: `${
+          fixed ? position.y * fixedDotSize + 5 : size * (board[1] + position.y)
+        }px`,
+        padding: `${(fixed ? fixedDotSize : size) / 50}px`,
       }}
       onMouseDown={(e) => {
         e.stopPropagation();
       }}
       onDragStart={(e) => {
-        e.stopPropagation();
         setStartDrag([e.clientX, e.clientY]);
       }}
-      onDrag={(e) => {
-        e.stopPropagation();
-      }}
+      onDrag={(e) => {}}
       onDragEnd={(e) => {
         if (!startDrag) return;
         const rawDeltaX = e.clientX - startDrag[0];
@@ -107,7 +110,6 @@ const Dot = ({
         ${rotation === 90 ? styles.rot90 : ""} 
         ${rotation === 180 ? styles.rot180 : ""} 
         ${rotation === 270 ? styles.rot270 : ""}
-       
         `}
         style={{
           backgroundColor: color,

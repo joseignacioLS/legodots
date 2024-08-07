@@ -11,19 +11,20 @@
     background-color: transparent;
   }
 
-  &.hardSelected {
-    background-color: blue;
-    // &::after {
-    //   content: "";
-    //   width: 12px;
-    //   height: 12px;
-    //   position: absolute;
-    //   background-color: white;
-    //   border-radius: 100%;
-    //   top: 50%;
-    //   left: 50%;
-    //   transform: translate(-50%, -50%);
-    // }
+  &.hardSelected > .shape {
+    $opacity: .25;
+    background-image: linear-gradient(
+      45deg,
+      rgba(variables.$color_fg, $opacity) 25%,
+      rgba(variables.$color_bg, $opacity) 25%,
+      rgba(variables.$color_bg, $opacity) 50%,
+      rgba(variables.$color_fg, $opacity) 50%,
+      rgba(variables.$color_fg, $opacity) 75%,
+      rgba(variables.$color_bg, $opacity) 75%
+    ) !important;
+    background-size: 25px 25px;
+    background-position: center;
+    background-repeat: repeat;
   }
 
   &:has(.curve) {
@@ -63,6 +64,7 @@
     height: 100%;
     border-radius: $basicBorderRadius;
 
+    // rotations are not working for 2x1 and 4x1 because we rotate the shape, but not the wrapper!
     &.rot90 {
       rotate: 90deg;
     }
@@ -76,8 +78,7 @@
     }
 
     &.square {
-      border-radius: $basicBorderRadius $basicBorderRadius $basicBorderRadius
-        $basicBorderRadius;
+      border-radius: $basicBorderRadius;
     }
 
     &.square2x1 {

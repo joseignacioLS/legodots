@@ -7,7 +7,7 @@ import DotOptions from "../DotOptions/DotOptions";
 import SVGPaths from "../SVGPaths/SVGPaths";
 import { referenceDots } from "@/constants/referenceDots";
 import { IDot } from "@/constants/dots";
-import { checkCollision } from "@/utils/Space";
+import { checkCollision, Vector2 } from "@/utils/Space";
 
 const Board = () => {
   const [selectedDot, setSelectedDot] = useState<number | undefined>(undefined);
@@ -17,6 +17,8 @@ const Board = () => {
   const [unitSize, setUnitSize] = useState(80);
   const [pieces, setPieces] = useState<IDot[]>(referenceDots);
   const [copy, setCopy] = useState(false);
+
+  const [mousePosition, setMousePosition] = useState([0, 0]);
 
   const [boardDrag, setBoardDrag] = useState([0, 0]);
 
@@ -38,6 +40,10 @@ const Board = () => {
           newPiece[key as keyof IDot] = value as never;
         });
         newPiece.fixed = false;
+        newPiece.position = new Vector2(
+          Math.floor((mousePosition[0] - boardDrag[0] * unitSize) / unitSize),
+          Math.floor((mousePosition[1] - boardDrag[1] * unitSize) / unitSize)
+        );
         if (checkCollision(newPiece, newState)) return oldState;
         return [...newState, newPiece];
       });
@@ -139,6 +145,12 @@ const Board = () => {
         } else {
           setUnitSize((oldState) => oldState - 1);
         }
+      }}
+      onMouseOver={(e) => {
+        setMousePosition([e.clientX, e.clientY]);
+      }}
+      onDragOver={(e) => {
+        setMousePosition([e.clientX, e.clientY]);
       }}
       style={{
         backgroundSize: `${unitSize}px ${unitSize}px`,
