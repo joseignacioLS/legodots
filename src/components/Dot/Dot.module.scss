@@ -1,7 +1,9 @@
 @use "../../styles/variables";
 
 .dot {
-  $basicBorderRadius: 4%;
+  $basicBorderRadius: 4px;
+  width: fit-content;
+  height: fit-content;
 
   position: absolute;
   cursor: default;
@@ -12,7 +14,7 @@
   }
 
   &.hardSelected > .shape {
-    $opacity: .25;
+    $opacity: 0.25;
     background-image: linear-gradient(
       45deg,
       rgba(variables.$color_fg, $opacity) 25%,
@@ -25,38 +27,6 @@
     background-size: 25px 25px;
     background-position: center;
     background-repeat: repeat;
-  }
-
-  &:has(.curve) {
-    clip-path: url(#myCurve);
-
-    &:has(.rot90) {
-      clip-path: url(#myCurve90);
-    }
-
-    &:has(.rot180) {
-      clip-path: url(#myCurve180);
-    }
-
-    &:has(.rot270) {
-      clip-path: url(#myCurve270);
-    }
-  }
-
-  &:has(.bigCurve) {
-    clip-path: url(#myBigCurve);
-
-    &:has(.rot90) {
-      clip-path: url(#myBigCurve90);
-    }
-
-    &:has(.rot180) {
-      clip-path: url(#myBigCurve180);
-    }
-
-    &:has(.rot270) {
-      clip-path: url(#myBigCurve270);
-    }
   }
 
   .shape {
@@ -77,21 +47,12 @@
       rotate: 270deg;
     }
 
-    &.square {
-      border-radius: $basicBorderRadius;
-    }
-
     &.square2x1 {
-      transform-origin: 50% 24.5%;
+      transform-origin: 50% 25%;
     }
 
     &.square4x1 {
-      transform-origin: 50% 12.125%;
-    }
-
-    &.corner {
-      border-radius: 100% $basicBorderRadius $basicBorderRadius
-        $basicBorderRadius;
+      transform-origin: calc(50%) calc(12.5%);
     }
 
     &.u {

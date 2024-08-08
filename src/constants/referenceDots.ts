@@ -4,7 +4,7 @@ import { IDot } from "./dots";
 export const referenceDots: IDot[] = [
   {
     id: -1,
-    type: "dot",
+    type: "square",
     position: new Vector2(0, 0),
     rotation: 0,
     color: "#FF0000",
