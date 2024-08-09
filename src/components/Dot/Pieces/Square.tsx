@@ -19,13 +19,19 @@ const Square = ({
   margin,
   rotation,
 }: IProps) => {
+  const width =
+    pieceSize.x * (fixed ? fixedDotSize : size) - 2 * (fixed ? 1 : margin);
+  const height =
+    pieceSize.y * (fixed ? fixedDotSize : size) - 2 * (fixed ? 1 : margin);
   return (
     <div
       className={`${styles.shape}   ${styles.square}`}
       style={{
+        marginTop: `${margin}px`,
+        marginLeft: `${margin}px`,
         backgroundColor: color,
-        width: `${pieceSize.x * (fixed ? fixedDotSize : size) - 2 * margin}px`,
-        height: `${pieceSize.y * (fixed ? fixedDotSize : size) - 2 * margin}px`,
+        width: `${width}px`,
+        height: `${height}px`,
         borderRadius: `${size / 50}px`,
       }}
     ></div>

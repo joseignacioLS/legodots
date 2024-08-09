@@ -10,7 +10,7 @@ interface IProps {
   rotation: number;
 }
 
-const Curve = ({
+const Rect3x1 = ({
   color,
   pieceSize,
   fixed,
@@ -35,10 +35,9 @@ const Curve = ({
         backgroundColor: color,
         width: `${width}px`,
         height: `${height}px`,
-        clipPath: `url(#myCurve)`,
       }}
     ></div>
   );
 };
 
-export default Curve;
+export default Rect3x1;

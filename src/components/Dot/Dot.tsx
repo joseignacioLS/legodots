@@ -9,6 +9,8 @@ import Circle from "./Pieces/Circle";
 import Curve from "./Pieces/Curve";
 import BigCurve from "./Pieces/BigCurve";
 import Rect2x1 from "./Pieces/Rect2x1";
+import Rect3x1 from "./Pieces/Rect3x1";
+import Rect4x1 from "./Pieces/Rect4x1";
 
 interface IProps {
   id: number;
@@ -67,8 +69,8 @@ const Dot = ({
         ${hardSelected ? styles.hardSelected : ""}
         `}
       style={{
-        left: `${x + margin}px`,
-        top: `${y + margin}px`,
+        left: `${x}px`,
+        top: `${y}px`,
       }}
       onMouseDown={(e) => {
         e.stopPropagation();
@@ -177,6 +179,30 @@ const Dot = ({
 
       {type === "dot2x1" && (
         <Rect2x1
+          color={color}
+          pieceSize={pieceSize}
+          fixed={fixed}
+          fixedDotSize={fixedDotSize}
+          size={size}
+          margin={margin}
+          rotation={rotation}
+        />
+      )}
+
+      {type === "dot3x1" && (
+        <Rect3x1
+          color={color}
+          pieceSize={pieceSize}
+          fixed={fixed}
+          fixedDotSize={fixedDotSize}
+          size={size}
+          margin={margin}
+          rotation={rotation}
+        />
+      )}
+
+      {type === "dot4x1" && (
+        <Rect4x1
           color={color}
           pieceSize={pieceSize}
           fixed={fixed}
